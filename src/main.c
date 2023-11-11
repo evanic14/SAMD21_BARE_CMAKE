@@ -118,7 +118,7 @@ int main(void)
      * Call the crossplatform hal to set the pin output dir
      */
     gpio_set_pin_mode(LedSPin, GPIO_MODE_OUTPUT);
-	while (1) {
+	while(1) {
         gpio_toggle_pin_output(LedSPin);
         for(uint32_t i =0; i< 100000; i++);
 	}
