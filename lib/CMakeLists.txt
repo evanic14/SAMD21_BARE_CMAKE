@@ -1,2 +1,1 @@
 add_subdirectory(Universal_hal)
-add_subdirectory(NeoPixel_lib)

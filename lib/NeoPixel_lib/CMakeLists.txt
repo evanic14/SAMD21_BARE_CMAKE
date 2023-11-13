@@ -1,3 +1,0 @@
-add_library(NeoPixel Light_WS2812/light_ws2812_cortex.c)
-target_include_directories(NeoPixel PUBLIC Light_WS2812)
-target_link_libraries(NeoPixel Universal_hall)
