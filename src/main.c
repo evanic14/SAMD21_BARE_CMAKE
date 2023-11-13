@@ -21,8 +21,8 @@ const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 #define CLOCK_DFLL48	0x07
 #define CLOCK_8MHZ		0x06
 
-#define STACK_SIZE 200
 #define MAIN_CLOCK_SPEED 48000000
+#define STACK_SIZE 200
 
 /* Structure that will hold the TCB of the task being created. */
 StaticTask_t xTaskBuffer;
@@ -133,9 +133,15 @@ void vTaskCode( void * pvParameters )
 {
 
     gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
+    gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
+    gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
+    gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
     for( ;; )
     {
         gpio_toggle_pin_output(LedHBPin);
+        gpio_toggle_pin_output(LedSNPin);
+        gpio_toggle_pin_output(LedTXPin);
+        gpio_toggle_pin_output(LedRXPin);
         vTaskDelay(100/portTICK_PERIOD_MS);
     }
 }
