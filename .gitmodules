@@ -7,3 +7,6 @@
 [submodule "lib/Universal_hal"]
 	path = lib/Universal_hal
 	url = git@github.com:Hoog-V/Universal_hal.git
+[submodule "board_sdk/FreeRTOS"]
+	path = board_sdk/FreeRTOS
+	url = https://github.com/RobotPatient/FreeRTOS.git

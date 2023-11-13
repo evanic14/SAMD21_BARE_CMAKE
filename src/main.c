@@ -1,9 +1,15 @@
 #include "sam.h"
 #include <hal_gpio.h>
+#include <FreeRTOSConfig.h>
+#include <FreeRTOS.h>
+#include <task.h>
 
 const gpio_pin_t LedSNPin = GPIO_PIN_PA2;
-const gpio_pin_t LedHBPin = GPIO_PIN_PA23;
-const gpio_pin_t NeoPixel = GPIO_PIN_PA10;
+const gpio_pin_t LedHBPin = GPIO_PIN_PA15;
+const gpio_pin_t LedTXPin = GPIO_PIN_PA27;
+const gpio_pin_t LedRXPin = GPIO_PIN_PB3;
+
+const gpio_pin_t NeoPixel = GPIO_PIN_PA6;
 const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 
 // Constants for Clock Generators
@@ -14,6 +20,17 @@ const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 #define CLOCK_XOSC32K	0x05
 #define CLOCK_DFLL48	0x07
 #define CLOCK_8MHZ		0x06
+
+#define STACK_SIZE 200
+#define MAIN_CLOCK_SPEED 48000000
+
+/* Structure that will hold the TCB of the task being created. */
+StaticTask_t xTaskBuffer;
+
+/* Buffer that the task being created will use as its stack.  Note this is
+an array of StackType_t variables.  The size of StackType_t is dependent on
+the RTOS port. */
+StackType_t xStack[ STACK_SIZE ];
 
 //function for setting related to power management system
 //See section 16 of the datasheet
@@ -53,7 +70,7 @@ void Clock_Init(void) {
 	GCLK->GENCTRL.bit.OOV = 0;		// We will not use this signal as an output
 	GCLK->GENCTRL.bit.IDC = 1;		// Generator duty cycle is 50/50
 	GCLK->GENCTRL.bit.GENEN = 1;	// Enable the generator
-	GCLK->GENCTRL.bit.SRC = CLOCK_XOSC32K;	// Generator source: XOSC32K output
+	GCLK->GENCTRL.bit.SRC = GCLK_SOURCE_OSCULP32K;	// Generator source: XOSC32K output
 	GCLK->GENCTRL.bit.ID = GENERIC_CLOCK_GENERATOR_1;	// This was created in Definitions.h, refers to generic clock 1
 	// GENCTRL is Write-Synchronized...so wait for write to complete
 	while(GCLK->STATUS.bit.SYNCBUSY);
@@ -110,6 +127,19 @@ void Clock_Init(void) {
 }
 
 
+
+/* Function that implements the task being created. */
+void vTaskCode( void * pvParameters )
+{
+
+    gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
+    for( ;; )
+    {
+        gpio_toggle_pin_output(LedHBPin);
+        vTaskDelay(100/portTICK_PERIOD_MS);
+    }
+}
+
 int main(void)
 {
     /*
@@ -119,12 +149,27 @@ int main(void)
     /*
      * Call the crossplatform hal to set the pin output dir
      */
-    gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
-    gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
+    xTaskCreateStatic(
+            vTaskCode,       /* Function that implements the task. */
+            "CBTASK",          /* Text name for the task. */
+            STACK_SIZE,      /* Number of indexes in the xStack array. */
+            ( void * ) 1,    /* Parameter passed into the task. */
+            tskIDLE_PRIORITY,/* Priority at which the task is created. */
+            xStack,          /* Array to use as the task's stack. */
+            &xTaskBuffer );  /* Variable to hold the task's data structure. */
+
+
+    vTaskStartScheduler();
 	while(1) {
-        gpio_toggle_pin_output(LedHBPin);
-        gpio_toggle_pin_output(LedSNPin);
-        for(uint32_t i =0; i< 100000; i++);
+//        gpio_toggle_pin_output(LedHBPin);
+//        gpio_toggle_pin_output(LedSNPin);
+//        gpio_toggle_pin_output(LedTXPin);
+//        gpio_toggle_pin_output(LedRXPin);
+//        for(uint32_t i =0; i< 48e6/6; i++);
 
 	}
 }
