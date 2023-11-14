@@ -2,21 +2,21 @@
 
 
 Breakpoint=C:/Users/emiel/OneDrive/Documenten/Github-repos/CMAKE-workshop/SAMD21_BARE_CMAKE/src/main.c:139:5, State=BP_STATE_DISABLED
-Breakpoint=C:/Users/emiel/OneDrive/Documenten/Github-repos/CMAKE-workshop/SAMD21_BARE_CMAKE/src/main.c:187:2, State=BP_STATE_DISABLED
+Breakpoint=C:/Users/emiel/OneDrive/Documenten/Github-repos/CMAKE-workshop/SAMD21_BARE_CMAKE/src/main.c:165:5, State=BP_STATE_DISABLED
 OpenDocument="main.c", FilePath="C:/Users/emiel/OneDrive/Documenten/Github-repos/CMAKE-workshop/SAMD21_BARE_CMAKE/src/main.c", Line=156
 OpenToolbar="File", Floating=0, x=1, y=0
 OpenToolbar="Debug", Floating=0, x=0, y=0
 OpenToolbar="Breakpoints", Floating=0, x=2, y=0
-OpenWindow="Call Stack", DockArea=BOTTOM, x=1, y=0, w=958, h=301, TabPos=1, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=1, w=737, h=214, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Memory 1", DockArea=BOTTOM, x=1, y=0, w=958, h=301, TabPos=2, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x150
-OpenWindow="Local Data", DockArea=RIGHT, x=0, y=2, w=737, h=188, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Functions", DockArea=RIGHT, x=0, y=0, w=737, h=194, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=961, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="RTOS", DockArea=BOTTOM, x=1, y=0, w=958, h=301, TabPos=0, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, Showing=""
+OpenWindow="Call Stack", DockArea=BOTTOM, x=2, y=0, w=484, h=301, TabPos=0, TopOfStack=0, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=0, w=737, h=132, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=2, y=0, w=484, h=301, TabPos=1, TopOfStack=1, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x150
+OpenWindow="Local Data", DockArea=RIGHT, x=0, y=1, w=737, h=118, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Functions", DockArea=RIGHT, x=0, y=2, w=737, h=346, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=1240, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="RTOS", DockArea=BOTTOM, x=1, y=0, w=194, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, Showing=""
 SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
 TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Stack Frame";"Source";"PC";"Return Address";"Stack Used"], ColWidths=[161;112;112;100;168;100]
 TableHeader="Local Data", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[140;100;100;100;210;100]
-TableHeader="Functions", SortCol="Name", SortOrder="DESCENDING", VisibleCols=["Name";"Address";"Size";"#Insts";"Source"], ColWidths=[1715;100;100;100;189]
+TableHeader="Functions", SortCol="Name", SortOrder="DESCENDING", VisibleCols=["Name";"Address";"Size";"#Insts";"Source"], ColWidths=[1715;100;100;100;100]
 TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
 TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]

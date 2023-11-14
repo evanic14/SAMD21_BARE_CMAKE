@@ -10,6 +10,10 @@ const gpio_pin_t LedHBPin = GPIO_PIN_PA15;
 const gpio_pin_t LedTXPin = GPIO_PIN_PA27;
 const gpio_pin_t LedRXPin = GPIO_PIN_PB3;
 
+const gpio_pin_t btn1 = GPIO_PIN_PB31;
+const gpio_pin_t btn2 = GPIO_PIN_PB0;
+const gpio_pin_t btn3 = GPIO_PIN_PB1;
+
 const gpio_pin_t NeoPixel = GPIO_PIN_PA6;
 const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 
@@ -140,16 +144,33 @@ void vTaskCode( void * pvParameters )
     gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
+
+    gpio_set_pin_mode(btn1, GPIO_MODE_INPUT);
+    gpio_set_pin_mode(btn2, GPIO_MODE_INPUT);
+    gpio_set_pin_mode(btn3, GPIO_MODE_INPUT);
+
+    gpio_set_pin_options(btn1, GPIO_OPT_PULL_UP);
+    gpio_set_pin_options(btn2, GPIO_OPT_PULL_UP);
+    gpio_set_pin_options(btn3, GPIO_OPT_PULL_UP);
     //const uint8_t buffer[3] = {0xFF, 0xFF, 0xFF};
     for( ;; )
     {
         //spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
         // Replace the example data with your own RGB values
+        if (gpio_get_pin_lvl(btn1) == GPIO_LOW)
+        {
+            gpio_toggle_pin_output(LedSNPin);
+        }
+        else if (gpio_get_pin_lvl(btn2) == GPIO_HIGH)
+        {
+            gpio_toggle_pin_output(LedTXPin);
+        }
+        else if (gpio_get_pin_lvl(btn3) == GPIO_LOW)
+        {
+            gpio_toggle_pin_output(LedRXPin);
+        }
         gpio_toggle_pin_output(LedHBPin);
-        gpio_toggle_pin_output(LedSNPin);
-        gpio_toggle_pin_output(LedTXPin);
-        gpio_toggle_pin_output(LedRXPin);
-        vTaskDelay(100/portTICK_PERIOD_MS);
+        vTaskDelay(1000/portTICK_PERIOD_MS);
     }
 }
 
@@ -158,14 +179,14 @@ int main(void)
     /*
      * Set the main clock to 48MHz
      */
-	//Clock_Init();
+	Clock_Init();
     /*
      * Call the crossplatform hal to set the pin output dir
      */
-    gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
-    gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
-    gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
-    gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
+//    gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
 
     xTaskCreateStatic(
             vTaskCode,       /* Function that implements the task. */
