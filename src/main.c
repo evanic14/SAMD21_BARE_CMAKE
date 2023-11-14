@@ -61,7 +61,7 @@ void Clock_Init(void) {
     while(!SYSCTRL->PCLKSR.bit.OSC32KRDY);
 
     //Generic clock subsystem setting GENDIV register to set the divide factor for Generic clock 1
-    GCLK->GENDIV.reg |= GCLK_GENDIV_DIV(1) | GCLK_GENDIV_ID(3); //set divide factor for gen clock 1
+    GCLK->GENDIV.reg |= GCLK_GENDIV_DIV(1) | GCLK_GENDIV_ID(GENERIC_CLOCK_GENERATOR_1);; //set divide factor for gen clock 1
 
     // Configure Generic Clock Generator 1 with XOSC32K as source
     GCLK->GENCTRL.bit.RUNSTDBY = 0; // Generic Clock Generator is stopped in stdby
@@ -71,12 +71,12 @@ void Clock_Init(void) {
     GCLK->GENCTRL.bit.IDC = 1;		// Generator duty cycle is 50/50
     GCLK->GENCTRL.bit.GENEN = 1;	// Enable the generator
     GCLK->GENCTRL.bit.SRC = GCLK_GENCTRL_SRC_OSC32K_Val;	// Generator source: XOSC32K output
-    GCLK->GENCTRL.bit.ID = 3;	// This was created in Definitions.h, refers to generic clock 1
+    GCLK->GENCTRL.bit.ID = GENERIC_CLOCK_GENERATOR_1;	// This was created in Definitions.h, refers to generic clock 1
     // GENCTRL is Writesrc/Clock_stuff.h-Synchronized...so wait for write to complete
     while(GCLK->STATUS.bit.SYNCBUSY);
 
     //			Enable the Generic Clock     // Generic Clock Generator 1 is the source			 Generic Clock Multiplexer 0 (DFLL48M Reference)
-    GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN(3) | GCLK_CLKCTRL_ID_DFLL48;
+    GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN(GENERIC_CLOCK_GENERATOR_1) | GCLK_CLKCTRL_ID_DFLL48;
 
     // DFLL Configuration in Closed Loop mode, cf product data sheet chapter
     // 17.6.7.1 - Closed-Loop Operation
@@ -104,7 +104,7 @@ void Clock_Init(void) {
     // Switch DFLL48M to Closed Loop mode and enable WAITLOCK
     SYSCTRL->DFLLCTRL.reg |= (uint16_t) (SYSCTRL_DFLLCTRL_MODE | SYSCTRL_DFLLCTRL_WAITLOCK);
 
-    GCLK->GENDIV.reg = GCLK_GENDIV_DIV(1) | GCLK_GENDIV_ID(0); //set divide factor for gen clock 0
+    GCLK->GENDIV.reg = GCLK_GENDIV_DIV(1) | GCLK_GENDIV_ID(GENERIC_CLOCK_GENERATOR_0); //set divide factor for gen clock 0
     // Now that DFLL48M is running, switch CLKGEN0 source to it to run the core at 48 MHz.
     // Enable output of Generic Clock Generator 0 (GCLK_MAIN) to the GCLK_IO[0] GPIO Pin
     GCLK->GENCTRL.bit.RUNSTDBY = 0;		// Generic Clock Generator is stopped in stdby
@@ -114,8 +114,8 @@ void Clock_Init(void) {
     GCLK->GENCTRL.bit.IDC = 1;			// Generator duty cycle is 50/50
     GCLK->GENCTRL.bit.GENEN = 1;		// Enable the generator
     //The next two lines are where we set the system clock
-    GCLK->GENCTRL.bit.SRC = 0x07;		// Generator source: DFLL48M output
-    GCLK->GENCTRL.bit.ID = 0;	// Generic clock gen 0 is used for system clock
+    GCLK->GENCTRL.bit.SRC = CLOCK_DFLL48;		// Generator source: DFLL48M output
+    GCLK->GENCTRL.bit.ID = GENERIC_CLOCK_GENERATOR_0;	// Generic clock gen 0 is used for system clock
     // GENCTRL is Write-Synchronized...so wait for write to complete
     while(GCLK->STATUS.bit.SYNCBUSY);
 
@@ -130,20 +130,20 @@ void Clock_Init(void) {
 /* Function that implements the task being created. */
 void vTaskCode( void * pvParameters )
 {
-    vTaskDelay(100/portTICK_PERIOD_MS);
+    //vTaskDelay(100/portTICK_PERIOD_MS);
     //gpio_set_pin_mode(NeoPixel, GPIO_MODE_D);
     //gpio_set_pin_mode(GPIO_PIN_PA7, GPIO_MODE_C);
     //gpio_set_pin_mode(GPIO_PIN_PA4, GPIO_MODE_C);
-    spi_host_init(SPI_PERIPHERAL_0, SPI_CLK_SOURCE_USE_DEFAULT, 48e6, 1e6, (SPI_BUS_OPT_DOPO_PAD_1 | SPI_BUS_OPT_DIPO_PAD_0));
+    //spi_host_init(SPI_PERIPHERAL_0, SPI_CLK_SOURCE_USE_DEFAULT, 48e6, 1e6, (SPI_BUS_OPT_DOPO_PAD_1 | SPI_BUS_OPT_DIPO_PAD_0));
     // Set the LED_PIN as an output
     gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
-    const uint8_t buffer[3] = {0xFF, 0xFF, 0xFF};
+    //const uint8_t buffer[3] = {0xFF, 0xFF, 0xFF};
     for( ;; )
     {
-        spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
+        //spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
         // Replace the example data with your own RGB values
         gpio_toggle_pin_output(LedHBPin);
         gpio_toggle_pin_output(LedSNPin);
@@ -158,7 +158,7 @@ int main(void)
     /*
      * Set the main clock to 48MHz
      */
-	Clock_Init();
+	//Clock_Init();
     /*
      * Call the crossplatform hal to set the pin output dir
      */
