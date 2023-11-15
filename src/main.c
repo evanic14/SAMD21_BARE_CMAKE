@@ -161,7 +161,7 @@ void vTaskCode( void * pvParameters )
         {
             gpio_toggle_pin_output(LedSNPin);
         }
-        else if (gpio_get_pin_lvl(btn2) == GPIO_HIGH)
+        else if (gpio_get_pin_lvl(btn2) == GPIO_LOW)
         {
             gpio_toggle_pin_output(LedTXPin);
         }
@@ -169,6 +169,13 @@ void vTaskCode( void * pvParameters )
         {
             gpio_toggle_pin_output(LedRXPin);
         }
+        else
+        {
+            gpio_set_pin_lvl(LedSNPin, GPIO_LOW);
+            gpio_set_pin_lvl(LedTXPin, GPIO_LOW);
+            gpio_set_pin_lvl(LedRXPin, GPIO_LOW);
+        }
+
         gpio_toggle_pin_output(LedHBPin);
         vTaskDelay(1000/portTICK_PERIOD_MS);
     }
