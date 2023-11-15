@@ -195,7 +195,7 @@ class Adafruit_NeoPixel {
 
 public:
   // Constructor: number of LEDs, pin number, LED type
-  Adafruit_NeoPixel(uint16_t n, int16_t pin = const gpio_pin_t GPIO_PIN_PA6, neoPixelType type = NEO_GRB + NEO_KHZ800);
+  Adafruit_NeoPixel(uint16_t n, int16_t pin = 6, neoPixelType type = NEO_GRB + NEO_KHZ800);
   Adafruit_NeoPixel(void);
   ~Adafruit_NeoPixel();
 

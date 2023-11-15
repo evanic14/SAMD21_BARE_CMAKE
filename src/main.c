@@ -3,7 +3,7 @@
 #include <FreeRTOSConfig.h>
 #include <FreeRTOS.h>
 #include <task.h>
-#include "lib/NeoPixel_lib/Adafruit_NeoPixel.h"
+//#include "lib/NeoPixel_lib/Adafruit_NeoPixel.h"
 #include <hal_spi_host.h>
 
 
@@ -20,7 +20,7 @@ const gpio_pin_t NeoPixel = GPIO_PIN_PA6;
 int const NEOPIXELS = 1;
 const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 
-Adafruit_NeoPixel strip = Adafruit_NeoPixel(NEOPIXELS, NeoPixel, NEO_GRB + NEO_KHZ800);
+//Adafruit_NeoPixel strip = Adafruit_NeoPixel(NEOPIXELS, NeoPixel, NEO_GRB + NEO_KHZ800);
 
 // Constants for Clock Generators
 #define GENERIC_CLOCK_GENERATOR_0   (0u)
@@ -152,7 +152,6 @@ void vTaskHeartbeat( void * pvParameters )
     {
         //spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
         // Replace the example data with your own RGB values
-        N
         gpio_toggle_pin_output(LedHBPin);
         vTaskDelay(500/portTICK_PERIOD_MS);
     }
