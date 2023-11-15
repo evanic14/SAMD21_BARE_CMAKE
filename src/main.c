@@ -3,7 +3,9 @@
 #include <FreeRTOSConfig.h>
 #include <FreeRTOS.h>
 #include <task.h>
+#include "lib/NeoPixel_lib/Adafruit_NeoPixel.h"
 #include <hal_spi_host.h>
+
 
 const gpio_pin_t LedSNPin = GPIO_PIN_PA2;
 const gpio_pin_t LedHBPin = GPIO_PIN_PA15;
@@ -15,7 +17,10 @@ const gpio_pin_t btn2 = GPIO_PIN_PB0;
 const gpio_pin_t btn3 = GPIO_PIN_PB1;
 
 const gpio_pin_t NeoPixel = GPIO_PIN_PA6;
+int const NEOPIXELS = 1;
 const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
+
+Adafruit_NeoPixel strip = Adafruit_NeoPixel(NEOPIXELS, NeoPixel, NEO_GRB + NEO_KHZ800);
 
 // Constants for Clock Generators
 #define GENERIC_CLOCK_GENERATOR_0   (0u)
@@ -130,9 +135,8 @@ void Clock_Init(void) {
     PM_Clock_Bus_Setup(); //setup power management system
 }
 
-
 /* Function that implements the task being created. */
-void vTaskCode( void * pvParameters )
+void vTaskHeartbeat( void * pvParameters )
 {
     //vTaskDelay(100/portTICK_PERIOD_MS);
     //gpio_set_pin_mode(NeoPixel, GPIO_MODE_D);
@@ -140,7 +144,22 @@ void vTaskCode( void * pvParameters )
     //gpio_set_pin_mode(GPIO_PIN_PA4, GPIO_MODE_C);
     //spi_host_init(SPI_PERIPHERAL_0, SPI_CLK_SOURCE_USE_DEFAULT, 48e6, 1e6, (SPI_BUS_OPT_DOPO_PAD_1 | SPI_BUS_OPT_DIPO_PAD_0));
     // Set the LED_PIN as an output
+    gpio_set_pin_mode(NeoPixel, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
+
+    //const uint8_t buffer[3] = {0xFF, 0xFF, 0xFF};
+    for( ;; )
+    {
+        //spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
+        // Replace the example data with your own RGB values
+        N
+        gpio_toggle_pin_output(LedHBPin);
+        vTaskDelay(500/portTICK_PERIOD_MS);
+    }
+}
+
+void vTaskButtonRead( void * pvParameters )
+{
     gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
@@ -152,11 +171,9 @@ void vTaskCode( void * pvParameters )
     gpio_set_pin_options(btn1, GPIO_OPT_PULL_UP);
     gpio_set_pin_options(btn2, GPIO_OPT_PULL_UP);
     gpio_set_pin_options(btn3, GPIO_OPT_PULL_UP);
-    //const uint8_t buffer[3] = {0xFF, 0xFF, 0xFF};
+
     for( ;; )
     {
-        //spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
-        // Replace the example data with your own RGB values
         if (gpio_get_pin_lvl(btn1) == GPIO_LOW)
         {
             gpio_toggle_pin_output(LedSNPin);
@@ -175,9 +192,6 @@ void vTaskCode( void * pvParameters )
             gpio_set_pin_lvl(LedTXPin, GPIO_LOW);
             gpio_set_pin_lvl(LedRXPin, GPIO_LOW);
         }
-
-        gpio_toggle_pin_output(LedHBPin);
-        vTaskDelay(1000/portTICK_PERIOD_MS);
     }
 }
 
@@ -190,27 +204,37 @@ int main(void)
     /*
      * Call the crossplatform hal to set the pin output dir
      */
-//    gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
-//    gpio_set_pin_mode(LedSNPin, GPIO_MODE_OUTPUT);
-//    gpio_set_pin_mode(LedTXPin, GPIO_MODE_OUTPUT);
-//    gpio_set_pin_mode(LedRXPin, GPIO_MODE_OUTPUT);
 
-    xTaskCreateStatic(
-            vTaskCode,       /* Function that implements the task. */
-            "CBTASK",          /* Text name for the task. */
+//    xTaskCreateStatic(
+//            vTaskBlink,       /* Function that implements the task. */
+//            "Blink",          /* Text name for the task. */
+//            STACK_SIZE,      /* Number of indexes in the xStack array. */
+//            ( void * ) 1,    /* Parameter passed into the task. */
+//            tskIDLE_PRIORITY,/* Priority at which the task is created. */
+//            xStack,          /* Array to use as the task's stack. */
+//            &xTaskBuffer      /* Variable to hold the task's data structure. */
+//    );
+
+    xTaskCreate(
+            vTaskHeartbeat,       /* Function that implements the task. */
+            "Heartbeat",          /* Text name for the task. */
             STACK_SIZE,      /* Number of indexes in the xStack array. */
             ( void * ) 1,    /* Parameter passed into the task. */
             tskIDLE_PRIORITY,/* Priority at which the task is created. */
-            xStack,          /* Array to use as the task's stack. */
-            &xTaskBuffer );  /* Variable to hold the task's data structure. */
+            xStack          /* Array to use as the task's stack. */
+    );
 
+    xTaskCreate(
+            vTaskButtonRead,       /* Function that implements the task. */
+            "Button Read",          /* Text name for the task. */
+            STACK_SIZE,      /* Number of indexes in the xStack array. */
+            ( void * ) 1,    /* Parameter passed into the task. */
+            tskIDLE_PRIORITY,/* Priority at which the task is created. */
+            xStack          /* Array to use as the task's stack. */
+    );
     vTaskStartScheduler();
 
-	while(1) {
-        //gpio_toggle_pin_output(LedHBPin);
-        //gpio_toggle_pin_output(LedSNPin);
-        //gpio_toggle_pin_output(LedTXPin);
-        //gpio_toggle_pin_output(LedRXPin);
-        //for(uint32_t i = 0; i< 48e6/6; i++);
+	while(1)
+    {
 	}
 }
