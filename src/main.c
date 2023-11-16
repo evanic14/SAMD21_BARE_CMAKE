@@ -1,11 +1,11 @@
 #include "sam.h"
 #include <hal_gpio.h>
+#include <hal_i2c_host.h>
 #include <FreeRTOSConfig.h>
 #include <FreeRTOS.h>
 #include <task.h>
 //#include "lib/NeoPixel_lib/Adafruit_NeoPixel.h"
 #include <hal_spi_host.h>
-
 
 const gpio_pin_t LedSNPin = GPIO_PIN_PA2;
 const gpio_pin_t LedHBPin = GPIO_PIN_PA15;
@@ -16,11 +16,38 @@ const gpio_pin_t btn1 = GPIO_PIN_PB31;
 const gpio_pin_t btn2 = GPIO_PIN_PB0;
 const gpio_pin_t btn3 = GPIO_PIN_PB1;
 
-const gpio_pin_t NeoPixel = GPIO_PIN_PA6;
-int const NEOPIXELS = 1;
-const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
+const gpio_pin_t statNeoPixel  = GPIO_PIN_PA6;
+const gpio_pin_t NeoPixelZone1 = GPIO_PIN_PB16;
+const gpio_pin_t NeoPixelZone2 = GPIO_PIN_PA19;
+const gpio_pin_t NeoPixelZone3 = GPIO_PIN_PB17;
+const gpio_pin_t NeoPixelZone4 = GPIO_PIN_PA20;
 
-//Adafruit_NeoPixel strip = Adafruit_NeoPixel(NEOPIXELS, NeoPixel, NEO_GRB + NEO_KHZ800);
+const gpio_pin_t IO_MUX_SDA = GPIO_PIN_PA16;
+const gpio_pin_t IO_MUX_SDO = GPIO_PIN_PA17;
+
+const gpio_pin_t MAIN_SDA  = GPIO_PIN_PA22;
+const gpio_pin_t MAIN_SDO  = GPIO_PIN_PA23;
+const gpio_pin_t MAIN_INT4 = GPIO_PIN_PA4;
+const gpio_pin_t MAIN_INT5 = GPIO_PIN_PA5;
+
+const gpio_pin_t AUX_SDA = GPIO_PIN_PA12;
+const gpio_pin_t AUX_SDO = GPIO_PIN_PA13;
+
+const gpio_pin_t LED_SIN   = GPIO_PIN_PB10;
+const gpio_pin_t LED_CLK   = GPIO_PIN_PB11;
+const gpio_pin_t LED_LAT   = GPIO_PIN_PB12;
+const gpio_pin_t LEDG_CLK  = GPIO_PIN_PB13;
+const gpio_pin_t LED_BLANK = GPIO_PIN_PB14;
+
+const gpio_pin_t FLASH_CLK  = GPIO_PIN_PA9;
+const gpio_pin_t FLASH_MISO = GPIO_PIN_PA14;
+const gpio_pin_t FLASH_MOSI = GPIO_PIN_PA8;
+const gpio_pin_t FLASH_CS   = GPIO_PIN_PA7;
+
+const gpio_pin_t USB_DP = GPIO_PIN_PA24;
+const gpio_pin_t USB_DM = GPIO_PIN_PA25;
+
+//const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 
 // Constants for Clock Generators
 #define GENERIC_CLOCK_GENERATOR_0   (0u)
@@ -34,6 +61,19 @@ const gpio_pin_t GCLK0Pin = GPIO_PIN_PA14;
 #define MAIN_CLOCK_SPEED 48000000
 #define STACK_SIZE 200
 
+#define I2C_CLOCK_SPEED 100000 /* I2C bus speed of 100 KHz */
+
+/* Use SERCOM3 as peripheral */
+#define I2C_PERIPHERAL I2C_PERIPHERAL_3
+
+/* Use default clock sources, e.g. arduino framework clock system */
+#define I2C_CLOCK_SOURCE I2C_CLK_SOURCE_USE_DEFAULT
+
+/* Use the default configuration options */
+#define I2C_EXTRA_CONFIG_OPTIONS I2C_EXTRA_OPT_NONE
+
+#define IO_MUX_ADDR 0x20
+
 /* Structure that will hold the TCB of the task being created. */
 StaticTask_t xTaskBuffer;
 
@@ -41,7 +81,6 @@ StaticTask_t xTaskBuffer;
 an array of StackType_t variables.  The size of StackType_t is dependent on
 the RTOS port. */
 StackType_t xStack[ STACK_SIZE ];
-
 
 //function for setting related to power management system
 //See section 16 of the datasheet
@@ -135,27 +174,44 @@ void Clock_Init(void) {
     PM_Clock_Bus_Setup(); //setup power management system
 }
 
+void IO_MUX_READ()
+{
+    const uint8_t inBuffer[3] = {0xFF, 0xFF, 0xFF};
+    int8_t outBuffer[3];
+
+    I2C_HOST_WRITE_BLOCKING(I2C_PERIPHERAL, IO_MUX_ADDR, inBuffer, 3, 0);
+    vTaskDelay(10/portTICK_PERIOD_MS);
+    I2C_HOST_READ_BLOCKING(I2C_PERIPHERAL, IO_MUX_ADDR, outBuffer, 3);
+    vTaskDelay(10/portTICK_PERIOD_MS);
+}
+
 /* Function that implements the task being created. */
 void vTaskHeartbeat( void * pvParameters )
 {
-    //vTaskDelay(100/portTICK_PERIOD_MS);
-    //gpio_set_pin_mode(NeoPixel, GPIO_MODE_D);
-    //gpio_set_pin_mode(GPIO_PIN_PA7, GPIO_MODE_C);
-    //gpio_set_pin_mode(GPIO_PIN_PA4, GPIO_MODE_C);
-    //spi_host_init(SPI_PERIPHERAL_0, SPI_CLK_SOURCE_USE_DEFAULT, 48e6, 1e6, (SPI_BUS_OPT_DOPO_PAD_1 | SPI_BUS_OPT_DIPO_PAD_0));
-    // Set the LED_PIN as an output
-    gpio_set_pin_mode(NeoPixel, GPIO_MODE_OUTPUT);
+    gpio_set_pin_mode(statNeoPixel, GPIO_MODE_OUTPUT);
     gpio_set_pin_mode(LedHBPin, GPIO_MODE_OUTPUT);
 
     //const uint8_t buffer[3] = {0xFF, 0xFF, 0xFF};
     for( ;; )
     {
-        //spi_host_write_blocking(SPI_PERIPHERAL_0, buffer, 3);
-        // Replace the example data with your own RGB values
         gpio_toggle_pin_output(LedHBPin);
         vTaskDelay(500/portTICK_PERIOD_MS);
     }
 }
+
+void vTaskIOMUX( void * pvParameters )
+{
+    gpio_set_pin_mode(IO_MUX_SDA, GPIO_MODE_D);
+    gpio_set_pin_mode(IO_MUX_SDO, GPIO_MODE_C);
+
+    I2C_HOST_INIT(I2C_PERIPHERAL, I2C_CLOCK_SOURCE, MAIN_CLOCK_SPEED, I2C_CLOCK_SPEED, I2C_EXTRA_CONFIG_OPTIONS);
+    for( ;; )
+    {
+        IO_MUX_READ();
+    }
+
+}
+
 
 void vTaskButtonRead( void * pvParameters )
 {
@@ -200,10 +256,10 @@ int main(void)
      * Set the main clock to 48MHz
      */
 	Clock_Init();
+
     /*
      * Call the crossplatform hal to set the pin output dir
      */
-
 //    xTaskCreateStatic(
 //            vTaskBlink,       /* Function that implements the task. */
 //            "Blink",          /* Text name for the task. */
@@ -224,6 +280,15 @@ int main(void)
     );
 
     xTaskCreate(
+            vTaskIOMUX,       /* Function that implements the task. */
+            "Heartbeat",          /* Text name for the task. */
+            STACK_SIZE,      /* Number of indexes in the xStack array. */
+            ( void * ) 1,    /* Parameter passed into the task. */
+            tskIDLE_PRIORITY,/* Priority at which the task is created. */
+            xStack          /* Array to use as the task's stack. */
+    );
+
+    xTaskCreate(
             vTaskButtonRead,       /* Function that implements the task. */
             "Button Read",          /* Text name for the task. */
             STACK_SIZE,      /* Number of indexes in the xStack array. */
@@ -233,7 +298,8 @@ int main(void)
     );
     vTaskStartScheduler();
 
-	while(1)
+    while(1)
     {
+
 	}
 }
