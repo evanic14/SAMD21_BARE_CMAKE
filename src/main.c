@@ -47,7 +47,7 @@ StackType_t xStack[ STACK_SIZE ];
 //See section 16 of the datasheet
 void PM_Clock_Bus_Setup(void) {
 	//in power management system do not divide system clock down
-	PM->CPUSEL.reg  = PM_CPUSEL_CPUDIV_DIV1; 
+	PM->CPUSEL.reg  = PM_CPUSEL_CPUDIV_DIV1;
 	PM->APBASEL.reg = PM_APBASEL_APBADIV_DIV1_Val;
 	PM->APBBSEL.reg = PM_APBBSEL_APBBDIV_DIV1_Val;
 	PM->APBCSEL.reg = PM_APBCSEL_APBCDIV_DIV1_Val;
