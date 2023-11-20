@@ -61,7 +61,8 @@ const gpio_pin_t USB_DM = GPIO_PIN_PA25;
 #define MAIN_CLOCK_SPEED 48000000
 #define STACK_SIZE 200
 
-#define I2C_CLOCK_SPEED 100000 /* I2C bus speed of 100 KHz */
+/* I2C bus speed of 100 KHz */
+#define I2C_CLOCK_SPEED 100000
 
 /* Use SERCOM3 as peripheral */
 #define I2C_PERIPHERAL I2C_PERIPHERAL_3
@@ -209,7 +210,6 @@ void vTaskIOMUX( void * pvParameters )
     {
         IO_MUX_READ();
     }
-
 }
 
 

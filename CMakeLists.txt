@@ -67,7 +67,7 @@ add_link_options(-T ${LINKER_SCRIPT})
 
 
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
-target_link_libraries(${PROJECT_NAME}.elf PUBLIC Universal_hall)
+target_link_libraries(${PROJECT_NAME}.elf PUBLIC Universal_hal)
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC FreeRTOS)
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
