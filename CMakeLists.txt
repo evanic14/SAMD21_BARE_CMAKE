@@ -54,6 +54,7 @@ add_definitions( -D__SAMD21G18A__ -ffunction-sections -fdata-sections -fno-stric
 file(GLOB_RECURSE SOURCES
         "board_sdk/gcc/*.*"
         "board_sdk/gcc/gcc/*.*"
+        "src/Slave_driver.cpp"
         "src/main.c"
         #[[TODO rest of source locations]]
         )
@@ -69,6 +70,8 @@ add_link_options(-T ${LINKER_SCRIPT})
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC Universal_hal)
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC FreeRTOS)
+#target_link_libraries(${PROJECT_NAME}.elf PUBLIC fram_driver)
+#target_link_libraries(${PROJECT_NAME}.elf PUBLIC FastCRC)
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)

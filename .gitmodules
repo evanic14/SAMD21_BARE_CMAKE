@@ -10,3 +10,9 @@
 [submodule "board_sdk/FreeRTOS"]
 	path = board_sdk/FreeRTOS
 	url = https://github.com/RobotPatient/FreeRTOS.git
+[submodule "lib/FastCRC"]
+	path = lib/FastCRC
+	url = https://github.com/RobotPatient/FastCRC.git
+[submodule "lib/Manikin_Software_Libraries_V2"]
+	path = lib/Manikin_Software_Libraries_V2
+	url = https://github.com/RobotPatient/Manikin_Software_Libraries_V2.git
