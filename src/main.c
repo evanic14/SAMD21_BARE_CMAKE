@@ -41,6 +41,46 @@ void vTaskHeartbeat( void * pvParameters )
     }
 }
 
+void vTaskStatLed( void * pvParameters)
+{
+    gpio_set_pin_mode(GPIO_PIN_PA6, GPIO_MODE_OUTPUT);
+    __asm("NOP");
+    gpio_set_pin_lvl(GPIO_PIN_PA6, 1);
+    gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+    for(uint8_t i =0; i < 8; i++) {
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 1);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 1);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+    }
+    for(uint8_t i =0; i < 8; i++) {
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 1);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 1);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+    }
+    for(uint8_t i =0; i < 8; i++) {
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+    }
+    for(uint8_t i =0; i < 8; i++) {
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+        gpio_set_pin_lvl(GPIO_PIN_PA6, 0);
+        __asm("NOP");
+    }
+}
+
 void vTaskIOMUX( void * pvParameters )
 {
     I2C_HOST_INIT(I2C_PERIPHERAL, I2C_CLOCK_SOURCE, MAIN_CLOCK_SPEED, I2C_CLOCK_SPEED, I2C_EXTRA_CONFIG_OPTIONS);
@@ -100,6 +140,15 @@ int main(void)
     xTaskCreate(
             vTaskHeartbeat,       /* Function that implements the task. */
             "Heartbeat",          /* Text name for the task. */
+            STACK_SIZE,      /* Number of indexes in the xStack array. */
+            ( void * ) 1,    /* Parameter passed into the task. */
+            tskIDLE_PRIORITY,/* Priority at which the task is created. */
+            xStack          /* Array to use as the task's stack. */
+    );
+
+    xTaskCreate(
+            vTaskStatLed,       /* Function that implements the task. */
+            "control status led",          /* Text name for the task. */
             STACK_SIZE,      /* Number of indexes in the xStack array. */
             ( void * ) 1,    /* Parameter passed into the task. */
             tskIDLE_PRIORITY,/* Priority at which the task is created. */
