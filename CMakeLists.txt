@@ -22,7 +22,6 @@ set(MCPU cortex-m0plus)
 add_compile_options(-mcpu=${MCPU} -mthumb -mthumb-interwork)
 add_compile_options(-ffunction-sections -fdata-sections -fno-common -fmessage-length=0)
 
-
 if ("${CMAKE_BUILD_TYPE}" STREQUAL "Release")
     message(STATUS "Maximum optimization for speed")
     add_compile_options(-Ofast)
@@ -41,11 +40,12 @@ endif ()
 include_directories(
         ${CMAKE_SOURCE_DIR}/board_sdk/CMSIS_5/CMSIS/Core/Include/
         ${CMAKE_SOURCE_DIR}/board_sdk/cmsis-header-sam/samd21a/include/
-        ${CMAKE_SOURCE_DIR}/Universal_hall/hal_gpio/
-        ${CMAKE_SOURCE_DIR}/Universal_hall/hal_gpio/platform/atmelsam/
-        ${CMAKE_SOURCE_DIR}/Universal_hall/hal_i2c/
-        ${CMAKE_SOURCE_DIR}/Universal_hall/hal_i2c/platform/atmelsam/
-        ${CMAKE_SOURCE_DIR}/Universal_hall/platform_dep/atmelsam/
+        ${CMAKE_SOURCE_DIR}/Universal_hal/hal_gpio/
+        ${CMAKE_SOURCE_DIR}/Universal_hal/hal_gpio/platform/atmelsam/
+        ${CMAKE_SOURCE_DIR}/Universal_hal/hal_i2c/
+        ${CMAKE_SOURCE_DIR}/Universal_hal/hal_i2c/platform/atmelsam/
+        ${CMAKE_SOURCE_DIR}/Universal_hal/platform_dep/atmelsam/
+        ${CMAKE_SOURCE_DIR}/src
         .
         )
 
@@ -68,22 +68,21 @@ add_link_options(-T ${LINKER_SCRIPT})
 
 
 add_executable(${PROJECT_NAME}.elf ${SOURCES} ${LINKER_SCRIPT})
+target_link_libraries(${PROJECT_NAME}.elf PUBLIC board_sdk)
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC Universal_hal)
 target_link_libraries(${PROJECT_NAME}.elf PUBLIC FreeRTOS)
-#target_link_libraries(${PROJECT_NAME}.elf PUBLIC fram_driver)
-#target_link_libraries(${PROJECT_NAME}.elf PUBLIC FastCRC)
+target_link_libraries(${PROJECT_NAME}.elf PUBLIC fram_driver)
+target_link_libraries(${PROJECT_NAME}.elf PUBLIC FastCRC)
 
 set(HEX_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.hex)
 set(BIN_FILE ${PROJECT_BINARY_DIR}/${PROJECT_NAME}.bin)
 
-#[[
-add_custom_command(#TARGET ${PROJECT_NAME}.elf POST_BUILD
-        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
-        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
-        COMMENT "Building ${HEX_FILE}
-Building ${BIN_FILE}"
-)
-]]
+#add_custom_command(#TARGET ${PROJECT_NAME}.elf POST_BUILD
+#        COMMAND ${CMAKE_OBJCOPY} -Oihex $<TARGET_FILE:${PROJECT_NAME}.elf> ${HEX_FILE}
+#        COMMAND ${CMAKE_OBJCOPY} -Obinary $<TARGET_FILE:${PROJECT_NAME}.elf> ${BIN_FILE}
+#        COMMENT "Building ${HEX_FILE}
+#Building ${BIN_FILE}"
+#)
 
 add_subdirectory(board_sdk)
 add_subdirectory(lib)

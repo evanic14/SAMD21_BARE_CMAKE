@@ -41,7 +41,7 @@ void Clock_Init(void) {
     while(!SYSCTRL->PCLKSR.bit.OSC32KRDY);
 
     //Generic clock subsystem setting GENDIV register to set the divide factor for Generic clock 1
-    GCLK->GENDIV.reg |= GCLK_GENDIV_DIV(1) | GCLK_GENDIV_ID(GENERIC_CLOCK_GENERATOR_1);; //set divide factor for gen clock 1
+    GCLK->GENDIV.reg |= GCLK_GENDIV_DIV(1) | GCLK_GENDIV_ID(GENERIC_CLOCK_GENERATOR_1); //set divide factor for gen clock 1
 
     // Configure Generic Clock Generator 1 with OSC32K as source
     GCLK->GENCTRL.reg = GCLK_GENCTRL_OE | GCLK_GENCTRL_IDC | GCLK_GENCTRL_SRC_OSC32K | GCLK_GENCTRL_GENEN |
@@ -49,7 +49,7 @@ void Clock_Init(void) {
     // GENCTRL is Writesrc/Clock_stuff.h-Synchronized...so wait for write to complete
     while(GCLK->STATUS.bit.SYNCBUSY);
 
-    //			Enable the Generic Clock     // Generic Clock Generator 1 is the source			 Generic Clock Multiplexer 0 (DFLL48M Reference)
+    //Enable the Generic Clock     // Generic Clock Generator 1 is the source			 Generic Clock Multiplexer 0 (DFLL48M Reference)
     GCLK->CLKCTRL.reg = GCLK_CLKCTRL_CLKEN | GCLK_CLKCTRL_GEN(GENERIC_CLOCK_GENERATOR_1) | GCLK_CLKCTRL_ID_FDPLL;
     while(GCLK->STATUS.bit.SYNCBUSY);
     // DFLL Configuration in Closed Loop mode, cf product data sheet chapter

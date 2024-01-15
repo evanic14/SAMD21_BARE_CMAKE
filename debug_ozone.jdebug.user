@@ -1,17 +1,16 @@
 
 
-OpenDocument="main.c", FilePath="C:/Users/emiel/OneDrive/Documenten/Github-repos/CMAKE-workshop/SAMD21_BARE_CMAKE/src/main.c", Line=104
+OpenDocument="main.c", FilePath="C:/Users/emiel/OneDrive/Documenten/Github-repos/CMAKE-workshop/SAMD21_BARE_CMAKE/src/main.c", Line=98
 OpenToolbar="File", Floating=0, x=1, y=0
 OpenToolbar="Debug", Floating=0, x=0, y=0
 OpenToolbar="Breakpoints", Floating=0, x=2, y=0
-OpenWindow="Call Stack", DockArea=BOTTOM, x=1, y=0, w=242, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=0, w=468, h=399, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Memory 1", DockArea=BOTTOM, x=2, y=0, w=342, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x0
-OpenWindow="Local Data", DockArea=RIGHT, x=0, y=1, w=468, h=198, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
-OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=1334, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Call Stack", DockArea=BOTTOM, x=1, y=0, w=338, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Disassembly", DockArea=RIGHT, x=0, y=0, w=468, h=599, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Memory 1", DockArea=BOTTOM, x=2, y=0, w=479, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0, EditorAddress=0x0
+OpenWindow="Local Data", DockArea=RIGHT, x=0, y=1, w=468, h=381, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
+OpenWindow="Console", DockArea=BOTTOM, x=0, y=0, w=1869, h=320, FilterBarShown=0, TotalValueBarShown=0, ToolBarShown=0
 SmartViewPlugin="", Page="", Toolbar="Hidden", Window="SmartView 1"
 TableHeader="Local Data", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Location";"Size";"Type";"Scope"], ColWidths=[140;100;100;100;210;100]
-TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Stack Frame";"Source";"PC";"Return Address";"Stack Used"], ColWidths=[161;112;112;100;168;100]
+TableHeader="Call Stack", SortCol="Function", SortOrder="ASCENDING", VisibleCols=["Function";"Stack Frame";"Source";"PC";"Return Address";"Stack Used"], ColWidths=[161;112;112;100;168;112]
 TableHeader="Power Sampling", SortCol="None", SortOrder="ASCENDING", VisibleCols=["Index";"Time";"Ch 0"], ColWidths=[100;100;100]
 TableHeader="RegisterSelectionDialog", SortCol="None", SortOrder="ASCENDING", VisibleCols=[], ColWidths=[]
-TableHeader="TargetExceptionDialog", SortCol="Name", SortOrder="ASCENDING", VisibleCols=["Name";"Value";"Address";"Description"], ColWidths=[200;100;100;863]
