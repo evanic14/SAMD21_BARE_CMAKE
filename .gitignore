@@ -52,3 +52,5 @@ Mkfile.old
 dkms.conf
 .idea
 cmake-build-debug/
+lib/Universal_hal
+lib/Manikin_Software_Libraries_V2
